@@ -105,7 +105,7 @@ class VideoController extends Controller
     
         // Assuming you have a model named 'Video' and a corresponding database table
         // Replace 'videos' with the actual table name if it's different
-        $video = Video::find($contentId));
+        $video = Video::find($contentId);
     
         if ($video) {
             $videoUrl ='https://video.bangapp.pro/video/'. $video->uid.'/'.$video->processed_file;
