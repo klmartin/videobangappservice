@@ -117,11 +117,7 @@ class VideoController extends Controller
         $video = Video::where('post_id', $contentId)->first();
     
         if ($video) {
-<<<<<<< HEAD
             $videoUrl ='https://video.bangapp.pro/video/'. $video->uid.'/'.$video->processed_file;
-=======
-            $videoUrl ='http://188.166.93.233/video/'. $video->uid.'/'.$video->processed_file;
->>>>>>> origin/main
             return response()->json(['error'=>false,'data'=>array('video_url'=>$videoUrl)]);
         } else {
             // Handle the case where the video for the specified content ID is not found
@@ -139,11 +135,7 @@ class VideoController extends Controller
         if ($videos->count() > 0) {
             return response()->json(['error' => false, 'data' => $videos]);
         } else {
-<<<<<<< HEAD
-            // Handle the case where no videos with processing status 0 are found test
-=======
             // Handle the case where no videos with processing status 0 are found
->>>>>>> origin/main
             return response()->json(['error' => 'No videos with processing status 0 found'], 404);
         }
     }
@@ -161,20 +153,13 @@ class VideoController extends Controller
            
             return response()->json(['error'=>false,'data'=>$video]);
         } else {
-<<<<<<< HEAD
-            // Handle the case wher the video for the specified content ID is not found
-=======
             // Handle the case where the video for the specified content ID is not found
->>>>>>> origin/main
             return response()->json(['error' => 'Video not found for the given content ID'], 404);
         }
 
     }
     
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/main
     public function postVideo(Request $request){
 
         $client = new Client();
