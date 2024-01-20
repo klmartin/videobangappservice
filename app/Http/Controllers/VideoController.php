@@ -27,11 +27,11 @@ class VideoController extends Controller
 }
 
 
-     public function upload(Request $request)
+    public function upload(Request $request)
     {
         try {
             $request->validate([
-                'video' => 'required|mimetypes:video/mp4|max:1048576',
+                'video' => 'required|max:1048576',
                 'aspect_ratio' => 'required',
                 'contentID'=>'required',
 
