@@ -57,9 +57,8 @@ class CreateVideoForStreaming implements ShouldQueue
                     $filters->resize(1280, 720);
                 })->onProgress(function ($percentage) {
                 $this->video->update([
-                    'processing_percentage' => $percentage,
+                    'processing_percentage' => $percentage
                 ]);
-
 
 
             }) ->toDisk('videos')
@@ -79,6 +78,8 @@ class CreateVideoForStreaming implements ShouldQueue
         } catch (EncodingException $exception) {
             $command = $exception->getCommand();
             $errorLog = $exception->getErrorOutput();
+            info($command);
+            info($errorLog);
         }
 
     }
@@ -120,5 +121,10 @@ class CreateVideoForStreaming implements ShouldQueue
         // Close cURL session
         curl_close($ch);
 
+<<<<<<< HEAD
         }
 }
+=======
+    }
+}
+>>>>>>> 72c80dbd2140adf45be16fbe572d0a45ce9fc6be
