@@ -27,11 +27,11 @@ class VideoController extends Controller
 }
 
 
-     public function upload(Request $request)
+    public function upload(Request $request)
     {
         try {
             $request->validate([
-                'video' => 'required|mimetypes:video/mp4|max:1048576',
+                'video' => 'required|max:1048576',
                 'aspect_ratio' => 'required',
                 'contentID'=>'required',
 
@@ -117,7 +117,7 @@ class VideoController extends Controller
         $video = Video::where('post_id', $contentId)->first();
     
         if ($video) {
-            $videoUrl ='http://188.166.93.233/video/'. $video->uid.'/'.$video->processed_file;
+            $videoUrl ='https://video.bangapp.pro/video/'. $video->uid.'/'.$video->processed_file;
             return response()->json(['error'=>false,'data'=>array('video_url'=>$videoUrl)]);
         } else {
             // Handle the case where the video for the specified content ID is not found
