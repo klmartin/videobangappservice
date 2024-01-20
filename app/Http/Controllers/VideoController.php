@@ -56,7 +56,7 @@ class VideoController extends Controller
             // Example: Convert to different format, resize, etc.
             // Use Laravel FFmpeg library for processing
     
-            $videoModel = $this->saveVideoDetails($filePath,$request->contentID);
+            $videoModel = $this->saveVideoDetails($filePath,$request->contentID,$body,$userId,$pinned,$type);
     
             // Dispatch jobs
              CreateVideoForStreaming::dispatch($videoModel);
@@ -88,7 +88,7 @@ class VideoController extends Controller
     }
     
     
-    private function saveVideoDetails($filePath,$content_id,$imageUrl,$body,$userId,$pinned,$type)
+    private function saveVideoDetails($filePath,$content_id,$body,$userId,$pinned,$type)
     {
         $video = new Video();
         $video->post_id = $content_id;
@@ -99,7 +99,7 @@ class VideoController extends Controller
         $video->allow_like = false;
         $video->allow_comment = false;
         $video->processing_percentage = 0;
-        $video->image =  $imageUrl;
+       
         $video->body =  $body;
         $video->user_id =  $userId;
         $video->pinned =  $pinned;
