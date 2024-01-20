@@ -15,7 +15,11 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+<<<<<<< HEAD
        
+=======
+        
+>>>>>>> origin/main
     ];
 
     /**
@@ -29,7 +33,20 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('check-failure-payment')->daily();
 
+<<<<<<< HEAD
        
+=======
+        $schedule->call(function () {
+            $users = AfyachapUsersAccount::where('valid_to', '<=', Carbon::now())->get();
+
+            foreach ($users as $user) {
+                //Update each application as you want to
+                $user->user_account_type = 'FREE';
+                $user->save();
+            }
+
+        })->daily();
+>>>>>>> origin/main
 
     }
 

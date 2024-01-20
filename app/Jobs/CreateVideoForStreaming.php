@@ -45,11 +45,19 @@ class CreateVideoForStreaming implements ShouldQueue
             $lowBitrateFormat = (new X264)->setKiloBitrate(500);
             $midBitrateFormat = (new X264)->setKiloBitrate(1500);
             $highBitrateFormat = (new X264)->setKiloBitrate(3000);
+<<<<<<< HEAD
           // open the uploaded video from the right disk...
             FFMpeg::fromDisk('videos-temp')
                 ->open($this->video->path)
 
      // call the 'exportForHLS' method and specify the disk to which we want to export...
+=======
+            // open the uploaded video from the right disk...
+            FFMpeg::fromDisk('videos-temp')
+                ->open($this->video->path)
+
+            // call the 'exportForHLS' method and specify the disk to which we want to export...
+>>>>>>> origin/main
                 ->exportForHLS()->addFormat($lowBitrateFormat, function ($filters) {
                 $filters->resize(640, 480);
             })
@@ -60,6 +68,14 @@ class CreateVideoForStreaming implements ShouldQueue
                     'processing_percentage' => $percentage,
                 ]);
 
+<<<<<<< HEAD
+=======
+                if($percentage == 100){
+                    sendVideotoMainServer($this->video->path, $this->video->body,$this->video->uid,$this->pinned,$this->video->type)
+
+                }
+
+>>>>>>> origin/main
             }) ->toDisk('videos')
             // call the 'save' method with a filename...
                 ->save($this->video->uid . '/' . $this->video->uid . '.m3u8');
@@ -67,6 +83,7 @@ class CreateVideoForStreaming implements ShouldQueue
                 'processed_file' => $this->video->uid . '.m3u8',
             ]);
 
+<<<<<<< HEAD
 //             $low = (new X264('aac'))->setKiloBitrate(500);
 //             $high = (new X264('aac'))->setKiloBitrate(1000);
 //             FFMpeg::fromDisk('videos-temp')
@@ -92,6 +109,9 @@ class CreateVideoForStreaming implements ShouldQueue
 //             $this->video->update([
 //                 'processed_file' => $this->video->uid . '.m3u8',
 //             ]);
+=======
+
+>>>>>>> origin/main
 
         } catch (EncodingException $exception) {
             $command = $exception->getCommand();
@@ -99,4 +119,46 @@ class CreateVideoForStreaming implements ShouldQueue
         }
 
     }
+<<<<<<< HEAD
+=======
+
+    public function sendVideotoMainServer($imageUrl, $body, $userId, $pinned, $type)
+    {
+        $destinationServerURL = 'https://bangapp.pro/api/imageAddServer/';
+         // cURL setup
+        $ch = curl_init($destinationServerURL);
+
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, [
+            'image' => $imageUrl,
+            'body' => $body,
+            'user_id' => $userId,
+            'pinned' => $pinned,
+            'type' => $type,
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Execute cURL request
+        $response = curl_exec($ch);
+
+        // Get the HTTP response code
+        $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        // Check for cURL errors and HTTP status
+        if (curl_errno($ch)) {
+            return ['status' => 'error', 'message' => 'cURL error: ' . curl_error($ch)];
+        } elseif ($httpStatus >= 200 && $httpStatus < 300) {
+            // Successful cURL request
+            return ['status' => 'success', 'message' => 'Data sent successfully', 'http_status' => $httpStatus, 'api_response' => $response];
+        } else {
+            // Unsuccessful cURL request
+            return ['status' => 'error', 'message' => 'Failed to send data', 'http_status' => $httpStatus, 'api_response' => $response];
+        }
+
+        // Close cURL session
+        curl_close($ch);
+
+        }
+>>>>>>> origin/main
 }
