@@ -86,6 +86,7 @@ class VideoController extends Controller
         $video = new Video();
         $video->uid = uniqid(true);
         $video->path = $filePath;
+        $video->post_id = 12;
         $video->processed_file = false;
         $video->visibility = 'private';
         $video->allow_like = false;
