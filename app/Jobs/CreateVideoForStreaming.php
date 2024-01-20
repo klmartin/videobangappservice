@@ -121,10 +121,5 @@ class CreateVideoForStreaming implements ShouldQueue
         // Close cURL session
         curl_close($ch);
 
-<<<<<<< HEAD
-        }
-}
-=======
     }
 }
->>>>>>> 72c80dbd2140adf45be16fbe572d0a45ce9fc6be

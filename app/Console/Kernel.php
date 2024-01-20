@@ -15,15 +15,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-<<<<<<< HEAD
-<<<<<<< HEAD
-       
-=======
-        
->>>>>>> origin/main
-=======
         \App\Console\AFYACHAPSeedServiceRequestID::class,
->>>>>>> 67f23b66c5a008eec5464715e7e5cf5584a1f86f
     ];
 
     /**
@@ -37,9 +29,6 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('check-failure-payment')->daily();
 
-<<<<<<< HEAD
-       
-=======
         $schedule->call(function () {
             $users = AfyachapUsersAccount::where('valid_to', '<=', Carbon::now())->get();
 
@@ -50,7 +39,6 @@ class Kernel extends ConsoleKernel
             }
 
         })->daily();
->>>>>>> origin/main
 
     }
 
