@@ -59,8 +59,8 @@ class CreateVideoForStreaming implements ShouldQueue
                 $this->video->update([
                     'processing_percentage' => $percentage
                 ]);
-
-
+            
+                info($percentage);
             }) ->toDisk('videos')
             // call the 'save' method with a filename...
                 ->save($this->video->uid . '/' . $this->video->uid . '.m3u8');
