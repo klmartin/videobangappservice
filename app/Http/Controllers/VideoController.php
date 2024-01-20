@@ -44,7 +44,7 @@ class VideoController extends Controller
             $fileName = uniqid() . '.' . $video->getClientOriginalExtension();
             $filePath = 'videos-temp/' . $fileName;
 
-            $imageUrl = $request->imageUrl
+        
             $body = $request->input('body');
             $userId = $request->input('userId');
             $pinned = $request->input('pinned');
