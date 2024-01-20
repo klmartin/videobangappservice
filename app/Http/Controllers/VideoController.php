@@ -32,19 +32,13 @@ class VideoController extends Controller
         try {
             $request->validate([
                 'video' => 'required|max:1048576',
-                'aspect_ratio' => 'required',
-                'contentID'=>'required',
-
-
             ]);
 
             $video = $request->file('video');
             
-
             $fileName = uniqid() . '.' . $video->getClientOriginalExtension();
             $filePath = 'videos-temp/' . $fileName;
 
-        
             $body = $request->input('body');
             $userId = $request->input('userId');
             $pinned = $request->input('pinned');
@@ -56,7 +50,7 @@ class VideoController extends Controller
             // Example: Convert to different format, resize, etc.
             // Use Laravel FFmpeg library for processing
     
-            $videoModel = $this->saveVideoDetails($filePath,$request->contentID,$body,$userId,$pinned,$type);
+            $videoModel = $this->saveVideoDetails($filePath,$body,$userId,$pinned,$type);
     
             // Dispatch jobs
              CreateVideoForStreaming::dispatch($videoModel);
@@ -81,17 +75,15 @@ class VideoController extends Controller
         } catch (\Exception $e) {
             // Log the exception for debugging
             Log::error('Video upload failed: ' . $e->getMessage());
-    
             // Rethrow the exception with a more specific message
             throw new \Exception('The video failed to upload.', 500);
         }
     }
     
     
-    private function saveVideoDetails($filePath,$content_id,$body,$userId,$pinned,$type)
+    private function saveVideoDetails($filePath,$body,$userId,$pinned,$type)
     {
         $video = new Video();
-        $video->post_id = $content_id;
         $video->uid = uniqid(true);
         $video->path = $filePath;
         $video->processed_file = false;
@@ -99,7 +91,6 @@ class VideoController extends Controller
         $video->allow_like = false;
         $video->allow_comment = false;
         $video->processing_percentage = 0;
-       
         $video->body =  $body;
         $video->user_id =  $userId;
         $video->pinned =  $pinned;
@@ -114,7 +105,7 @@ class VideoController extends Controller
     
         // Assuming you have a model named 'Video' and a corresponding database table
         // Replace 'videos' with the actual table name if it's different
-        $video = Video::where('post_id', $contentId)->first();
+        $video = Video::find($contentId));
     
         if ($video) {
             $videoUrl ='https://video.bangapp.pro/video/'. $video->uid.'/'.$video->processed_file;
@@ -147,7 +138,7 @@ class VideoController extends Controller
     
         // Assuming you have a model named 'Video' and a corresponding database table
         // Replace 'videos' with the actual table name if it's different
-        $video = Video::where('post_id', $contentId)->first();
+        $video = Video::find($contentId);
     
         if ($video) {
            
