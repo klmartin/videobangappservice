@@ -69,16 +69,23 @@ class CreateVideoForStreaming implements ShouldQueue
                 ]);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 if($percentage == 100){
                     sendVideotoMainServer($this->video->path, $this->video->body,$this->video->uid,$this->pinned,$this->video->type)
+=======
+>>>>>>> 67f23b66c5a008eec5464715e7e5cf5584a1f86f
 
-                }
 
 >>>>>>> origin/main
             }) ->toDisk('videos')
             // call the 'save' method with a filename...
                 ->save($this->video->uid . '/' . $this->video->uid . '.m3u8');
+
+            $videoUrl ='https://video.bangapp.pro/video'. $this->video->uid . '/' . $this->video->uid . '.m3u8';
+
+            $this->sendVideotoMainServer($videoUrl, $this->video->body,$this->video->uid,$this->pinned,$this->video->type);
+               
             $this->video->update([
                 'processed_file' => $this->video->uid . '.m3u8',
             ]);

@@ -16,10 +16,14 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
 <<<<<<< HEAD
+<<<<<<< HEAD
        
 =======
         
 >>>>>>> origin/main
+=======
+        \App\Console\AFYACHAPSeedServiceRequestID::class,
+>>>>>>> 67f23b66c5a008eec5464715e7e5cf5584a1f86f
     ];
 
     /**

@@ -33,12 +33,22 @@ class VideoController extends Controller
             $request->validate([
                 'video' => 'required|mimetypes:video/mp4|max:1048576',
                 'aspect_ratio' => 'required',
-                'contentID'=>'required'
+                'contentID'=>'required',
+
+
             ]);
-    
+
             $video = $request->file('video');
+            
+
             $fileName = uniqid() . '.' . $video->getClientOriginalExtension();
             $filePath = 'videos-temp/' . $fileName;
+
+            $imageUrl = $request->imageUrl
+            $body = $request->body
+            $userId = $request->userId
+            $pinned = $request->pinned
+            $type = $request->type
     
             $this->storeVideo($video, $filePath);
     
@@ -78,7 +88,7 @@ class VideoController extends Controller
     }
     
     
-    private function saveVideoDetails($filePath,$content_id)
+    private function saveVideoDetails($filePath,$content_id,$imageUrl,$body,$userId,$pinned,$type)
     {
         $video = new Video();
         $video->post_id = $content_id;
@@ -89,6 +99,11 @@ class VideoController extends Controller
         $video->allow_like = false;
         $video->allow_comment = false;
         $video->processing_percentage = 0;
+        $video->image =  $imageUrl;
+        $video->body =  $body;
+        $video->user_id =  $userId;
+        $video->pinned =  $pinned;
+        $video->type =  $type;
         $video->save();
         return $video;
     }
