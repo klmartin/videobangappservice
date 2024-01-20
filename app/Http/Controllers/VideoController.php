@@ -45,10 +45,10 @@ class VideoController extends Controller
             $filePath = 'videos-temp/' . $fileName;
 
             $imageUrl = $request->imageUrl
-            $body = $request->body
-            $userId = $request->userId
-            $pinned = $request->pinned
-            $type = $request->type
+            $body = $request->input('body');
+            $userId = $request->input('userId');
+            $pinned = $request->input('pinned');
+            $type = $request->input('type');
     
             $this->storeVideo($video, $filePath);
     
