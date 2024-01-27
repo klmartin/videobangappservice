@@ -86,14 +86,14 @@ class CreateVideoForStreaming implements ShouldQueue
 
     public function sendVideotoMainServer($imageUrl, $body, $userId, $pinned, $type)
     {
-        $destinationServerURL = 'https://bangapp.pro/api/imageAddServer/';
+        $destinationServerURL = 'https://bangapp.pro/api/videoAddServer/';
          // cURL setup
         $ch = curl_init($destinationServerURL);
 
         // Set cURL options
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, [
-            'image' => $imageUrl,
+            'path' => $imageUrl,
             'body' => $body,
             'user_id' => $userId,
             'pinned' => $pinned,
