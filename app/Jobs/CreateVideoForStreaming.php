@@ -67,8 +67,11 @@ class CreateVideoForStreaming implements ShouldQueue
 
             $videoUrl ='https://video.bangapp.pro/video'. $this->video->uid . '/' . $this->video->uid . '.m3u8';
 
-            $this->sendVideotoMainServer($videoUrl, $this->video->body,$this->video->uid,$this->pinned,$this->video->type);
-               
+            $api = $this->sendVideotoMainServer($videoUrl, $this->video->body,$this->video->uid,$this->pinned,$this->video->type);
+            
+            info("resposse from api is");
+            info($api['api_response']);
+
             $this->video->update([
                 'processed_file' => $this->video->uid . '.m3u8',
             ]);
