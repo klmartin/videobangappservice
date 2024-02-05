@@ -11,6 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use ProtoneMedia\LaravelFFMpeg\Exporters\EncodingException;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
+use Illuminate\Support\Facades\Log;
 
 class CreateVideoForStreaming implements ShouldQueue
 {
@@ -24,7 +25,8 @@ class CreateVideoForStreaming implements ShouldQueue
     public $video;
     public $tries = 300;
     public $timeout = 5000000;
-
+    public $progress_percent=0;
+    protected $pinned;
     public function __construct(Video $video)
     {
         //
@@ -56,6 +58,7 @@ class CreateVideoForStreaming implements ShouldQueue
                 ->addFormat($highBitrateFormat, function ($filters) {
                     $filters->resize(1280, 720);
                 })->onProgress(function ($percentage) {
+                $this->progress_percent=$percentage;
                 $this->video->update([
                     'processing_percentage' => $percentage
                 ]);
@@ -67,16 +70,16 @@ class CreateVideoForStreaming implements ShouldQueue
 
             $videoUrl ='https://video.bangapp.pro/video'. $this->video->uid . '/' . $this->video->uid . '.m3u8';
 
-            $api = $this->sendVideotoMainServer($videoUrl, $this->video->body,$this->video->uid,$this->pinned,$this->video->type);
-            
-            info("resposse from api is");
-            info($api['api_response']);
-
+           
             $this->video->update([
                 'processed_file' => $this->video->uid . '.m3u8',
             ]);
-
-
+            if($this->progress_percent===100)
+            {
+            $api = $this->sendVideotoMainServer($videoUrl, $this->video->body,$this->video->uid,$this->pinned,$this->video->type);
+		Log::info("nimemalizaaaaaa");
+		Log::info(json_encode($api['api_response']));
+            }
 
         } catch (EncodingException $exception) {
             $command = $exception->getCommand();
