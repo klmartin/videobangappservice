@@ -11,6 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use ProtoneMedia\LaravelFFMpeg\Exporters\EncodingException;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
+use Illuminate\Support\Facades\Log;
 
 class CreateVideoForStreaming implements ShouldQueue
 {
@@ -27,7 +28,6 @@ class CreateVideoForStreaming implements ShouldQueue
 
     public function __construct(Video $video)
     {
-        //
         $this->video = $video;
     }
 
@@ -36,7 +36,6 @@ class CreateVideoForStreaming implements ShouldQueue
      *
      * @return void
      */
-
     public function handle()
     {
         try {
@@ -48,35 +47,35 @@ class CreateVideoForStreaming implements ShouldQueue
             // open the uploaded video from the right disk...
             FFMpeg::fromDisk('videos-temp')
                 ->open($this->video->path)
-
-            // call the 'exportForHLS' method and specify the disk to which we want to export...
                 ->exportForHLS()->addFormat($lowBitrateFormat, function ($filters) {
-                $filters->resize(640, 480);
-            })
+                    $filters->resize(640, 480);
+                })
                 ->addFormat($highBitrateFormat, function ($filters) {
                     $filters->resize(1280, 720);
                 })->onProgress(function ($percentage) {
-                $this->video->update([
-                    'processing_percentage' => $percentage
-                ]);
-            
-                info($percentage);
-            }) ->toDisk('videos')
-            // call the 'save' method with a filename...
-                ->save($this->video->uid . '/' . $this->video->uid . '.m3u8');
+                    $this->video->update([
+                        'processing_percentage' => $percentage
+                    ]);
+                    info($percentage);
+                })
+                ->toDisk('videos')
+                ->save($this->video->uid . '/' . $this->video->uid . '.m3u8')
+                ->then(function () {
+                    // Video export is complete, check the progress percentage
+                    if ($this->video->processing_percentage === 100) {
+                        $videoUrl = 'https://video.bangapp.pro/video' . $this->video->uid . '/' . $this->video->uid . '.m3u8';
 
-            $videoUrl ='https://video.bangapp.pro/video'. $this->video->uid . '/' . $this->video->uid . '.m3u8';
+                        $this->video->update([
+                            'processed_file' => $this->video->uid . '.m3u8',
+                        ]);
 
-            $api = $this->sendVideotoMainServer($videoUrl, $this->video->body,$this->video->uid,$this->pinned,$this->video->type);
-            
-            info("resposse from api is");
-            info($api['api_response']);
+                        // Call the sendVideotoMainServer function
+                        $api = $this->sendVideotoMainServer($videoUrl, $this->video->body, $this->video->uid, $this->video->pinned, $this->video->type);
 
-            $this->video->update([
-                'processed_file' => $this->video->uid . '.m3u8',
-            ]);
-
-
+                        info("response from API is");
+                        info(json_encode($api['api_response']));
+                    }
+                });
 
         } catch (EncodingException $exception) {
             $command = $exception->getCommand();
@@ -84,13 +83,12 @@ class CreateVideoForStreaming implements ShouldQueue
             info($command);
             info($errorLog);
         }
-
     }
 
     public function sendVideotoMainServer($imageUrl, $body, $userId, $pinned, $type)
     {
         $destinationServerURL = 'https://bangapp.pro/api/videoAddServer/';
-         // cURL setup
+        // cURL setup
         $ch = curl_init($destinationServerURL);
 
         // Set cURL options
@@ -123,6 +121,5 @@ class CreateVideoForStreaming implements ShouldQueue
 
         // Close cURL session
         curl_close($ch);
-
     }
 }
